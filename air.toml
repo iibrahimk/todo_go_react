@@ -1,0 +1,7 @@
+root="."
+tmp_dir = "tmp"
+[build]
+    bin = "main"
+    cmd = "gi build -o {{.Output}} {{.Input}}"
+    exclude = ["**/*.go"]
+    ignore = ["tmp/*"]
