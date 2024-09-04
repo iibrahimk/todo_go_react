@@ -17,7 +17,7 @@ import (
 )
 
 type Todo struct {
-	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Completed bool               `json:"completed"`
 	TaskID    string             `json:"taskid"`
 	Body      string             `json:"body"`
@@ -56,14 +56,16 @@ func main() {
 
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",                           // Allow all origins
-		AllowMethods: "GET,POST,PUT,DELETE",         // Allow specific HTTP methods
+		AllowOrigins: "*",                           // Allow all origins_Test purpose
+		AllowMethods: "GET,POST,PUT,DELETE,PATCH",   // Allow specific HTTP methods
 		AllowHeaders: "Content-Type, Authorization", // Allow specific headers
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Status(200).JSON(fiber.Map{"msg": "Server setup done!"})
-	})
+	// app.Get("/", func(c *fiber.Ctx) error {
+	// 	return c.Status(200).JSON(fiber.Map{"msg": "Server setup done!"})
+	// })
+
+	app.Static("/", "./client/dist")
 
 	app.Get("/api/gettodos", getTodos)
 	app.Post("/api/addtodo", addTodo)
@@ -96,7 +98,6 @@ func getTodos(c *fiber.Ctx) error {
 }
 
 func addTodo(c *fiber.Ctx) error {
-
 	todo := new(Todo)
 
 	if err := c.BodyParser(todo); err != nil {
@@ -121,7 +122,7 @@ func addTodo(c *fiber.Ctx) error {
 
 	todo.ID = insertResult.InsertedID.(primitive.ObjectID)
 
-	return c.JSON(todo)
+	return c.Status(200).JSON(todo)
 
 }
 
